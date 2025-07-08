@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Inventario Gamer de Pantallas</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: #111;
+      color: #fff;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 2.5em;
+      width: 100%;
+      margin-top: 20px;
+      text-shadow: 2px 2px 4px black;
+    }
+
+    .contenedor {
+      max-width: 900px;
+      margin: 30px;
+      padding: 20px;
+      background: rgba(0, 0, 0, 0.85);
+      border: 3px solid;
+      border-image: linear-gradient(45deg, #0ff, #0f0, #f0f) 1;
+      border-radius: 15px;
+      box-shadow: 0 0 20px #0ff;
+      flex: 1;
+    }
+
+    input, select, button {
+      width: 100%;
+      padding: 10px;
+      margin: 8px 0;
+      border: none;
+      border-radius: 8px;
+      font-size: 1em;
+    }
+
+    input, select {
+      background: #222;
+      color: #0ff;
+      border: 2px solid #0ff;
+    }
+
+    button {
+      background: linear-gradient(90deg, #0ff, #f0f);
+      color: black;
+      font-weight: bold;
+      cursor: pointer;
+      transition: transform 0.2s ease;
+    }
+
+    button:hover {
+      transform: scale(1.05);
+    }
+
+    .filtros button {
+      width: auto;
+      margin: 5px;
+      background-color: #333;
+      color: white;
+      border: 2px solid #0ff;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    .filtros button:hover {
+      background-color: #0ff;
+      color: black;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 15px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    th, td {
+      padding: 10px;
+      text-align: center;
+      border-bottom: 1px solid #555;
+    }
+
+    th {
+      background: #0ff;
+      color: black;
+    }
+
+    td {
+      color: #fff;
+    }
+
+    .acciones button {
+      margin: 2px;
+      padding: 5px 10px;
+      border-radius: 5px;
+      font-size: 0.9em;
+    }
+
+    .editar {
+      background-color: orange;
+      color: black;
+    }
+
+    .eliminar {
+      background-color: red;
+      color: white;
+    }
+
+    .vender {
+      background-color: limegreen;
+      color: black;
+    }
+
+    /* Ticket compacto */
+    .ticket {
+      max-width: 220px;
+      margin: 30px 20px;
+      background: #fff; /* fondo blanco */
+      border: 2px solid #0ff;
+      border-radius: 10px;
+      padding: 10px 15px;
+      box-shadow: 0 0 10px #0ff;
+      font-size: 12px;
+      font-family: 'Courier New', monospace;
+      color: #000; /* texto negro general */
+    }
+
+    .ticket h2 {
+      text-align: center;
+      margin: 8px 0;
+      font-size: 16px;
+      color: #000; /* título negro */
+      text-shadow: none;
+    }
+
+    .ticket p {
+      margin: 3px 0;
+      border-bottom: 1px dotted #0ff;
+      padding-bottom: 3px;
+      color: #000; /* texto negro */
+    }
+
+    .ticket .total {
+      font-weight: bold;
+      font-size: 14px;
+      border-top: 2px solid #0ff;
+      margin-top: 6px;
+      padding-top: 6px;
+      color: #080; /* verde oscuro */
+    }
+
+    .ticket button {
+      width: 100%;
+      margin-top: 10px;
+      padding: 6px 0;
+      background: #0ff;
+      color: #000;
+      font-weight: bold;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      display: none; /* Ocultar botón imprimir en pantalla */
+    }
+
+    @media print {
+      body *:not(.ticket):not(.ticket *) {
+        display: none !important;
+      }
+
+      .ticket {
+        max-width: 58mm;
+        padding: 5px 10px;
+        font-size: 10px;
+        border: none;
+        box-shadow: none;
+        background: #fff; /* fondo blanco */
+        color: #000; /* texto negro */
+      }
+
+      .ticket button {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Inventario De Pantallas</h1>
+
+  <div class="contenedor">
+    <select id="marca">
+      <option value="">Selecciona Marca</option>
+      <option>Samsung</option>
+      <option>Huawei</option>
+      <option>Oppo</option>
+      <option>Motorola</option>
+      <option>iPhone</option>
+      <option>Xiaomi</option>
+      <option>LG</option>
+      <option>Sony</option>
+      <option>Nokia</option>
+      <option>Alcatel</option>
+      <option>Realme</option>
+      <option>ZTE</option>
+      <option>Asus</option>
+      <option>Lenovo</option>
+      <option>OnePlus</option>
+      <option>Honor</option>
+      <option>HTC</option>
+      <option>Tecno</option>
+      <option>Vivo</option>
+      <option>Infinix</option>
+      <option>Otro</option>
+    </select>
+
+    <input type="text" id="modelo" placeholder="Modelo (ej. A12)">
+    
+    <select id="calidad">
+      <option value="">Selecciona Calidad</option>
+      <option>Original</option>
+      <option>Incell</option>
+    </select>
+
+    <input type="number" id="piezas" placeholder="Piezas existentes">
+    <input type="number" id="precio" placeholder="Precio ($)">
+    <button onclick="agregarPantalla()">Agregar Pantalla</button>
+
+    <input type="text" id="buscador" oninput="buscarPantalla()" placeholder="🔍 Buscar por cualquier campo">
+
+    <div class="filtros">
+      <button onclick="filtrarPorMarca('Samsung')">Samsung</button>
+      <button onclick="filtrarPorMarca('Huawei')">Huawei</button>
+      <button onclick="filtrarPorMarca('Oppo')">Oppo</button>
+      <button onclick="filtrarPorMarca('Motorola')">Motorola</button>
+      <button onclick="mostrarTodo()">Mostrar Todo</button>
+      <button onclick="exportarTablaPDF()" style="background-color:#0ff; color:black; font-weight:bold; margin-left:10px;">
+        Exportar a PDF
+      </button>
+    </div>
+
+    <table id="tablaPantallas">
+      <thead>
+        <tr>
+          <th>Marca</th>
+          <th>Modelo</th>
+          <th>Calidad</th>
+          <th>Piezas</th>
+          <th>Precio</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+  <div class="ticket" id="ticket" style="display:none;">
+    <h2>Ticket de Venta</h2>
+    <p id="t-marca"></p>
+    <p id="t-modelo"></p>
+    <p id="t-calidad"></p>
+    <p id="t-precio"></p>
+    <p id="t-fecha"></p>
+    <p class="total" id="t-total"></p>
+    <button onclick="window.print()">Imprimir Ticket</button>
+  </div>
+
+  <!-- Scripts de jsPDF y autoTable desde CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+
+<script>
+  let pantallaEditando = null;
+
+  window.onload = function () {
+    const datos = JSON.parse(localStorage.getItem("inventarioPantallas")) || [];
+    datos.forEach(p => insertarFila(p));
+  };
+
+  function guardarEnLocalStorage() {
+    const filas = document.querySelectorAll("#tablaPantallas tbody tr");
+    const inventario = [];
+
+    filas.forEach(fila => {
+      const celdas = fila.querySelectorAll("td");
+      inventario.push({
+        marca: celdas[0].innerText,
+        modelo: celdas[1].innerText,
+        calidad: celdas[2].innerText,
+        piezas: parseInt(celdas[3].innerText),
+        precio: parseFloat(celdas[4].innerText.replace("$", ""))
+      });
+    });
+
+    localStorage.setItem("inventarioPantallas", JSON.stringify(inventario));
+  }
+
+  function agregarPantalla() {
+    const marca = document.getElementById("marca").value;
+    const modelo = document.getElementById("modelo").value.trim();
+    const calidad = document.getElementById("calidad").value;
+    const piezas = document.getElementById("piezas").value;
+    const precio = document.getElementById("precio").value;
+
+    if (!marca || !modelo || !calidad || !piezas || !precio) {
+      alert("Completa todos los campos.");
+      return;
+    }
+
+    const datos = {
+      marca,
+      modelo,
+      calidad,
+      piezas: parseInt(piezas),
+      precio: parseFloat(precio)
+    };
+
+    if (pantallaEditando) {
+      pantallaEditando.innerHTML = crearFilaHTML(datos);
+      pantallaEditando = null;
+    } else {
+      insertarFila(datos);
+    }
+
+    limpiarFormulario();
+    guardarEnLocalStorage();
+  }
+
+  function insertarFila(p) {
+    const fila = document.createElement("tr");
+    fila.innerHTML = crearFilaHTML(p);
+    document.querySelector("#tablaPantallas tbody").appendChild(fila);
+  }
+
+  function crearFilaHTML(p) {
+    return `
+      <td>${p.marca}</td>
+      <td>${p.modelo}</td>
+      <td>${p.calidad}</td>
+      <td>${p.piezas}</td>
+      <td>$${p.precio.toFixed(2)}</td>
+      <td class="acciones">
+        <button class="editar" onclick="editarPantalla(this)">Editar</button>
+        <button class="eliminar" onclick="eliminarPantalla(this)">Eliminar</button>
+        <button class="vender" onclick="venderPantalla(this)">Vender</button>
+      </td>
+    `;
+  }
+
+  function limpiarFormulario() {
+    document.getElementById("marca").value = "";
+    document.getElementById("modelo").value = "";
+    document.getElementById("calidad").value = "";
+    document.getElementById("piezas").value = "";
+    document.getElementById("precio").value = "";
+  }
+
+  function eliminarPantalla(btn) {
+    btn.closest("tr").remove();
+    guardarEnLocalStorage();
+  }
+
+  function editarPantalla(btn) {
+    const fila = btn.closest("tr");
+    const celdas = fila.querySelectorAll("td");
+
+    document.getElementById("marca").value = celdas[0].innerText;
+    document.getElementById("modelo").value = celdas[1].innerText;
+    document.getElementById("calidad").value = celdas[2].innerText;
+    document.getElementById("piezas").value = celdas[3].innerText;
+    document.getElementById("precio").value = celdas[4].innerText.replace("$", "");
+
+    pantallaEditando = fila;
+  }
+
+  function venderPantalla(btn) {
+    const fila = btn.closest("tr");
+    const celdas = fila.querySelectorAll("td");
+    let piezas = parseInt(celdas[3].innerText);
+
+    if (piezas > 0) {
+      piezas--;
+      celdas[3].innerText = piezas;
+      guardarEnLocalStorage();
+
+      // Mostrar ticket
+      const precio = parseFloat(celdas[4].innerText.replace("$", ""));
+      const fecha = new Date().toLocaleString();
+
+      document.getElementById("t-marca").innerText = "Marca: " + celdas[0].innerText;
+      document.getElementById("t-modelo").innerText = "Modelo: " + celdas[1].innerText;
+      document.getElementById("t-calidad").innerText = "Calidad: " + celdas[2].innerText;
+      document.getElementById("t-precio").innerText = "Precio unitario: $" + precio.toFixed(2);
+      document.getElementById("t-fecha").innerText = "Fecha: " + fecha;
+      document.getElementById("t-total").innerText = "Total: $" + precio.toFixed(2);
+
+      document.getElementById("ticket").style.display = "block";
+
+    } else {
+      alert("No hay más piezas disponibles para vender.");
+    }
+  }
+
+  function buscarPantalla() {
+    const filtro = document.getElementById("buscador").value.toLowerCase();
+    document.querySelectorAll("#tablaPantallas tbody tr").forEach(fila => {
+      fila.style.display = fila.innerText.toLowerCase().includes(filtro) ? "" : "none";
+    });
+  }
+
+  function filtrarPorMarca(marcaBuscada) {
+    document.querySelectorAll("#tablaPantallas tbody tr").forEach(fila => {
+      const marca = fila.cells[0].innerText.toLowerCase();
+      fila.style.display = marca.includes(marcaBuscada.toLowerCase()) ? "" : "none";
+    });
+  }
+
+  function mostrarTodo() {
+    document.querySelectorAll("#tablaPantallas tbody tr").forEach(fila => fila.style.display = "");
+    document.getElementById("buscador").value = "";
+  }
+
+  async function exportarTablaPDF() {
+    const { jsPDF } = window.jspdf;
+
+    const doc = new jsPDF();
+
+    doc.setFontSize(18);
+    doc.text("Inventario Gamer de Pantallas", 14, 20);
+
+    const filasVisibles = Array.from(document.querySelectorAll("#tablaPantallas tbody tr"))
+      .filter(fila => fila.style.display !== "none");
+
+    if (filasVisibles.length === 0) {
+      alert("No hay datos visibles para exportar.");
+      return;
+    }
+
+    // Opcional: ordenar por Marca y luego Modelo
+    filasVisibles.sort((a, b) => {
+      const marcaA = a.cells[0].innerText.toLowerCase();
+      const marcaB = b.cells[0].innerText.toLowerCase();
+      if (marcaA < marcaB) return -1;
+      if (marcaA > marcaB) return 1;
+      // Si marca igual, ordenar por modelo
+      const modeloA = a.cells[1].innerText.toLowerCase();
+      const modeloB = b.cells[1].innerText.toLowerCase();
+      if (modeloA < modeloB) return -1;
+      if (modeloA > modeloB) return 1;
+      return 0;
+    });
+
+    const bodyData = filasVisibles.map(fila => {
+      return Array.from(fila.querySelectorAll("td")).slice(0, 5).map(td => td.innerText);
+    });
+
+    const headData = [["Marca", "Modelo", "Calidad", "Piezas", "Precio"]];
+
+    doc.autoTable({
+      head: headData,
+      body: bodyData,
+      startY: 30,
+      styles: { fontSize: 10, textColor: [0, 0, 0] },
+      headStyles: { fillColor: [0, 255, 255], textColor: [0, 0, 0] },
+      theme: 'striped'
+    });
+
+    doc.save("Inventario_Pantallas.pdf");
+  }
+</script>
+
+</body>
+</html>
